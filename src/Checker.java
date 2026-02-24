@@ -1,45 +1,12 @@
 import java.awt.*;
 
 public class Checker extends Hitbox {
-    private final int xSpeed = 0;
-    private int ySpeed;
-    public Checker(int ex, int wy, int wd, int ht, int sp){
+    char color;
+    public Checker(int ex, int wy, int wd, int ht, int sp,char c){
         super(ex, wy, wd, ht);
-//        xSpeed=sp;
-        ySpeed=sp;
+        color=c;
     }
-    public void bounce(){
-        if(getX()<=0){
-//            xSpeed=-xSpeed;
-            setX(0);
-        }
-        if(getX()+getW()>=1024){
-//            xSpeed=-xSpeed;
-            setX(1024-getW());
-        }
-        if(getY()+(getH()/10)<=0){
-            ySpeed=-ySpeed;
-            setY(0);
-        }
-        if(getY()+(getH()/10)+getH()>768){
-            ySpeed=-ySpeed;
-            setY(768-getH()-(getH()/10));
-        }
-    }
-    public void bounceStuff(Hitbox o){
-        Hitbox xt=new Hitbox(o.getX(),o.getY(),o.getW(),1);
-        Hitbox xb=new Hitbox(o.getX(),o.getY()+getH(),o.getW(),1);
-        Hitbox yl=new Hitbox(o.getX(),o.getY(),1,o.getH());
-        Hitbox yr=new Hitbox(o.getX()+o.getW(),o.getY(),1,o.getH());
-        if(intersects(o)){
-           if(intersects(xt) || intersects(xb)){
-               ySpeed=-ySpeed;
-           }
-           if(intersects(yl) || intersects(yr)){
-//               xSpeed=-xSpeed;
-           }
-        }
-    }
+}
     /*public void bouncePaddle(Paddle o){
         double midX=getX()+ getW()/2;
         double midXo=o.getX()+o.getW()/2;
@@ -67,9 +34,6 @@ public class Checker extends Hitbox {
 //            }
         }
     }*/
-    public int getxSpeed() {
-        return xSpeed;
-    }
     public int getySpeed() {
         return ySpeed/4;
     }
