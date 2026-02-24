@@ -23,9 +23,40 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, KeyList
 		window.setColor(Color.WHITE); window.drawRect( 0,0, 1024, 768); // draws a black box around the outside
 
 		window.setColor(Color.BLUE); // to change fonts, color, etc: go to the Graphics Intro Folder
+		int w = getWidth();
+		int h = getHeight();
+		int mar = 30;
+		int fr = 35;
+		int barW = 70;
+		window.setColor(new Color(110, 60, 30));
+		window.fillRect(mar, mar, w - 2 * mar, h - 2 * mar);
+		int inX = mar+fr;
+		int inY = mar+fr;
+		int inW = w-2*(mar+fr);
+		int inH = h-2*(mar+fr);
 
+		window.setColor(new Color(170, 140, 90));
+		window.fillRect(inX, inY, inW, inH);
 
+		int midX = inX + (inW - barW) / 2;
+		window.setColor(new Color(90, 50, 25));
+		window.fillRect(midX, inY, barW, inH);
 
+		int hal = inH /2;
+		int pH = (int) ((int) hal*.90);
+		int pW = (inW-barW) /2;
+		for (int i = 0; i < 12; i++) {
+			int topX;
+			if(i<6) {
+				topX = inX+i*pW;
+			} else topX = inX+barW+i*pW;
+			Color c = (i%2==0)?new Color(120,80,45):new Color(235,230,210);
+			window.setColor(c);
+			fillTriangle(window,topX,inY,pW,pH,false);
+			fillTriangle(window, topX, inY + inH, pW, pH, true);
+		}
+		window.setColor(Color.BLACK);
+		window.drawRect(mar,mar,w-2*mar,h-2*mar);
 //		for(Ball ball:balls) {
 //			ball.paint(window);
 //			//make the Ball move
@@ -52,6 +83,17 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, KeyList
 //            window.drawString("GOOD JOB",0,400);
 //            gameEndW=true;
         }
+
+	private void fillTriangle(Graphics window, int x, int bY, int w, int h, boolean up) {
+		int[] xs = {x, x + w, x + w / 2};
+		int[] ys;
+		if (up) {
+			ys = new int[]{bY, bY, bY - h};
+		} else {
+			ys = new int[]{bY,bY,bY,bY+h};
+		}
+		window.fillPolygon(xs,ys,3);
+	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
