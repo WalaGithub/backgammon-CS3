@@ -43,7 +43,7 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, KeyList
 		int midX = inX + (inW - barW) / 2;
 		window.setColor(new Color(90, 50, 25));
 		window.fillRect(midX, inY, barW, inH);
-//
+////
 		window.setColor(new Color(80, 45, 25));
 		window.fillRect(offX, inY, offW, inH);
 
