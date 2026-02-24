@@ -6,7 +6,7 @@ public class Checker extends Hitbox {
         super(ex, wy, wd, ht);
         color=c;
     }
-}
+}//
     /*public void bouncePaddle(Paddle o){
         double midX=getX()+ getW()/2;
         double midXo=o.getX()+o.getW()/2;
