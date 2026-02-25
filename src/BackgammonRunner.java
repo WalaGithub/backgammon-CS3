@@ -3,7 +3,7 @@ import javax.swing.*;
 class BackgammonRunner extends JFrame {
 	private static final int WIDTH = 1024;
 	private static final int HEIGHT = 768;
-	ImageIcon icon = new ImageIcon("images/middle.gif");
+	ImageIcon icon = new ImageIcon("icon.png");
 	JLabel label1 = new JLabel("Image and Text", icon, JLabel.CENTER);
 	public BackgammonRunner()
 	{
