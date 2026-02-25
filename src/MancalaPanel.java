@@ -1,12 +1,14 @@
 import java.awt.*;
-import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-class BackgammonPanel extends JPanel implements Runnable, MouseListener, KeyListener {
+class MancalaPanel extends JPanel implements Runnable, MouseListener, KeyListener {
+	private int[] pits = new int[14];
+	Board board;
+	Player player1;
+	boolean gameOver;
 
-
-	public BackgammonPanel()
+	public MancalaPanel()
 	{
 
 		//DO NOT TOUCH these 3 lines
