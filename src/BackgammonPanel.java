@@ -4,11 +4,12 @@ import java.awt.event.*;
 import javax.swing.*;
 //
 class BackgammonPanel extends JPanel implements Runnable, MouseListener, KeyListener {
-
-
+    Dice d1;
+    Dice d2;
 	public BackgammonPanel()
 	{
-
+        d1=new Dice();
+        d2=new Dice();
 		//DO NOT TOUCH these 3 lines
 		//these lines load the listener that listens for the keyboard presses
 		addKeyListener( this );   	//
@@ -19,6 +20,7 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, KeyList
 
 	public void paint( Graphics window )// all other paint methods and game logic goes in here.
 	{
+        //Board start
 		window.setColor(Color.BLACK); window.fillRect( 0,0, 1024, 768); // makes the background white
 		window.setColor(Color.WHITE); window.drawRect( 0,0, 1024, 768); // draws a black box around the outside
 
@@ -66,7 +68,7 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, KeyList
 		}
 		window.setColor(Color.BLACK);
 		window.drawRect(mar,mar,w-2*mar,h-2*mar);
-
+        //board end
         }
 
 	private void fillTriangle(Graphics window, int x, int bY, int w, int h, boolean up) {
