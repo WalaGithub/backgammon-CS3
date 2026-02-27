@@ -182,10 +182,8 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, MouseMo
             mouse_button = "LEFT CLICK";
             int[] c1=d1.getCordinets();
             int[] c2=d2.getCordinets();
-            if(mouse_x>c1[0] && mouse_x<c1[1] && mouse_y>c1[2] && mouse_y<c1[3]){
+            if((mouse_x>c1[0] && mouse_x<c1[1] && mouse_y>c1[2] && mouse_y<c1[3]) || (mouse_x>c2[0] && mouse_x<c2[1] && mouse_y>c2[2] && mouse_y<c2[3])){
                 d1.roll();
-            }
-            if(mouse_x>c2[0] && mouse_x<c2[1] && mouse_y>c2[2] && mouse_y<c2[3]){
                 d2.roll();
             }
         } else if (e.getButton() == MouseEvent.BUTTON3) {
