@@ -6,6 +6,7 @@ import javax.swing.*;
 class BackgammonPanel extends JPanel implements Runnable, MouseListener, KeyListener {
     Dice d1;
     Dice d2;
+	private int mouse_x, mouse_y;
 	public BackgammonPanel()
 	{
         d1=new Dice();
@@ -69,7 +70,14 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, KeyList
 		window.setColor(Color.BLACK);
 		window.drawRect(mar,mar,w-2*mar,h-2*mar);
         //board end
+
         d1.paiut(window,130,130);
+
+		window.setColor(Color.WHITE);
+		window.drawString("Mouse coordinates " + "(" + MouseInfo.getPointerInfo().getLocation().x + "   " + MouseInfo.getPointerInfo().getLocation().y + ")", 250, 30);
+		window.setColor(Color.RED);
+		window.drawString("Mouse coordinates " + "(" + mouse_x + "   " + mouse_y + ")", 250, 50);
+		window.setColor(Color.GREEN);
         }
 
 	private void fillTriangle(Graphics window, int x, int bY, int w, int h, boolean up) {
@@ -87,44 +95,134 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, KeyList
 	public void keyTyped(KeyEvent e) {
 
 	}
-
 	@Override
 	public void keyPressed(KeyEvent e) {
 
 	}
-
 	@Override
 	public void keyReleased(KeyEvent e) {
 
 	}
-
 	@Override
 	public void mouseClicked(MouseEvent e) {
-
 	}
-
 	@Override
 	public void mousePressed(MouseEvent e) {
 
 	}
 
+	public void mouseMoved(MouseEvent e) {
+
+		mouse_x = e.getX();
+		mouse_y = e.getY();
+	}
 	@Override
 	public void mouseReleased(MouseEvent e) {
 
 	}
-
 	@Override
 	public void mouseEntered(MouseEvent e) {
 
 	}
-
 	@Override
 	public void mouseExited(MouseEvent e) {
 
 	}
-
 	@Override
 	public void run() {
 
 	}
 }
+
+/*
+
+
+import javax.swing.*;
+import java.util.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+
+public class MouseBob extends JPanel implements Runnable, MouseListener, MouseMotionListener {
+	private int mouse_x, mouse_y;
+	private String mouse_button;
+	private ArrayList<Bob> bobs;
+
+	public MouseBob() {
+		setBackground(Color.WHITE);
+		mouse_x = 0;
+		mouse_y = 0;
+		mouse_button = "NO BUTTON CLICKED!";
+		bobs = new ArrayList<Bob>();
+		addMouseListener(this);
+		addMouseMotionListener(this);
+		new Thread(this).start();
+
+		// Load your custom cursor image
+		BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
+				cursorImg, new Point(0, 0), "blank cursor");
+		setCursor(blankCursor);
+
+		// Set the custom cursor to your JPanel
+		setCursor(blankCursor);
+	}
+
+	public void paintComponent(Graphics window) {
+		super.paintComponent(window); // Always call the super method
+		window.setColor(Color.BLACK);
+		window.fillRect(0, 0, 800, 600);
+		window.setColor(Color.WHITE);
+		window.drawString("Mouse coordinates " + "(" + MouseInfo.getPointerInfo().getLocation().x + "   " + MouseInfo.getPointerInfo().getLocation().y + ")", 250, 30);
+		window.setColor(Color.RED);
+		window.drawString("Mouse coordinates " + "(" + mouse_x + "   " + mouse_y + ")", 250, 50);
+		window.setColor(Color.GREEN);
+		window.drawString(mouse_button, 250, 70);
+
+		// This makes a new Bob on the mouse cursor
+		Bob b = new Bob(mouse_x, mouse_y, 50, 50);
+
+		// This paints the bob on the mouse cursor
+		b.paintComponent(window);
+	}
+
+	public void mousePressed(MouseEvent e) {}
+
+	public void mouseReleased(MouseEvent e) {}
+
+	public void mouseEntered(MouseEvent e) {}
+
+	public void mouseExited(MouseEvent e) {}
+
+	public void mouseClicked(MouseEvent e) {
+		if (e.getButton() == MouseEvent.BUTTON1) {
+			mouse_button = "LEFT CLICK";
+			// Add a Bob to the list at this location
+		} else if (e.getButton() == MouseEvent.BUTTON3) {
+			mouse_button = "RIGHT CLICK";
+		}
+		// Write the code to remove the clicked on Bobs
+	} //How can I remove the original cursor so only bob.png is visible when on
+	// this window for this Java program that displays cursor information and shows bob.png:
+
+	public void mouseDragged(MouseEvent e) {}
+
+	public void mouseMoved(MouseEvent e) {
+		mouse_x = e.getX(); // This updates the X coordinate of the mouse
+		mouse_y = e.getY(); // This updates the Y coordinate of the mouse
+	}
+
+	public void run() {
+		try {
+			while (true) {
+				Thread.sleep(50);
+				repaint();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+
+
+ */
