@@ -2,20 +2,28 @@ import java.awt.*;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.*;
+import java.util.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
 //
-class BackgammonPanel extends JPanel implements Runnable, MouseListener, KeyListener {
-    Dice d1;
-    Dice d2;
+class BackgammonPanel extends JPanel implements Runnable, MouseListener, MouseMotionListener {
+//    Dice d1;
+//    Dice d2;
 	private int mouse_x, mouse_y;
 	public BackgammonPanel()
 	{
-        d1=new Dice();
-        d2=new Dice();
+//        d1=new Dice();
+//        d2=new Dice();
 		//DO NOT TOUCH these 3 lines
 		//these lines load the listener that listens for the keyboard presses
-		addKeyListener( this );   	//
+//		addKeyListener( this );   	//
 		setFocusable( true );		// Do NOT DELETE these three lines
 		addMouseListener(this); //
+		mouse_x = 0;
+		mouse_y = 0;
+		addMouseMotionListener(this);
 		new Thread(this).start();	//
 	}
 
@@ -71,13 +79,12 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, KeyList
 		window.drawRect(mar,mar,w-2*mar,h-2*mar);
         //board end
 
-        d1.paiut(window,130,130);
+//        d1.paint(window,130,130);
 
 		window.setColor(Color.WHITE);
 		window.drawString("Mouse coordinates " + "(" + MouseInfo.getPointerInfo().getLocation().x + "   " + MouseInfo.getPointerInfo().getLocation().y + ")", 250, 30);
 		window.setColor(Color.RED);
 		window.drawString("Mouse coordinates " + "(" + mouse_x + "   " + mouse_y + ")", 250, 50);
-		window.setColor(Color.GREEN);
         }
 
 	private void fillTriangle(Graphics window, int x, int bY, int w, int h, boolean up) {
@@ -92,22 +99,15 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, KeyList
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-
-	}
-	@Override
-	public void keyPressed(KeyEvent e) {
-
-	}
-	@Override
-	public void keyReleased(KeyEvent e) {
-
-	}
-	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
 	@Override
 	public void mousePressed(MouseEvent e) {
+
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
 
 	}
 
