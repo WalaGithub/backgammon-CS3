@@ -22,7 +22,7 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, MouseMo
     public BackgammonPanel() {
         mouse_button = "NO BUTTON CLICKED!";
         d1 = new Dice(412,382);
-        d2 = new Dice(412,382);
+        d2 = new Dice(612,382);
         //DO NOT TOUCH these 3 lines
         //these lines load the listener that listens for the keyboard presses
 //		addKeyListener( this );   	//
@@ -180,6 +180,14 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, MouseMo
     public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
             mouse_button = "LEFT CLICK";
+            int[] c1=d1.getCordinets();
+            int[] c2=d2.getCordinets();
+            if(mouse_x>c1[0] && mouse_x<c1[1] && mouse_y>c1[2] && mouse_y<c1[3]){
+                d1.roll();
+            }
+            if(mouse_x>c2[0] && mouse_x<c2[1] && mouse_y>c2[2] && mouse_y<c2[3]){
+                d2.roll();
+            }
         } else if (e.getButton() == MouseEvent.BUTTON3) {
             mouse_button = "RIGHT CLICK";
         }

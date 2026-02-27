@@ -5,8 +5,8 @@ public class Dice extends JPanel {
     int number, x, y;
     public Dice(int X, int Y){
         number=(int) (Math.random()*6)+1;
-        int x=X;
-        int y=Y;
+        x=X;
+        y=Y;
     }
     public void roll(){
         number=(int) (Math.random()*6)+1;
