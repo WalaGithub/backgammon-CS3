@@ -20,7 +20,7 @@ class BackgammonRunner extends JFrame {
 		//uncomment this when ready to start
 		//building the game
 		//getContentPane().add( new BreakOut() );
-				
+				//hiiii
 		setVisible(true);
 	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
