@@ -9,13 +9,19 @@ public class Checker extends JPanel {
         y=wy;
         color=c;
     }
-    public void paint(Graphics window) {
+    public void paint(Graphics window, boolean iUD) {
         if(color=='w'){
             window.setColor(Color.WHITE);
         }
         else if(color=='b'){
             window.setColor(Color.BLACK);
         }
-        window.fillOval(x-22,y-22,55,55);
+        if(iUD) {
+            window.fillOval(x-22,y-22,55,55);
+        }
+        else {
+            window.fillOval(x-22,y-22,55,55);
+        }
+
     }
 }

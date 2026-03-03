@@ -26,7 +26,37 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, MouseMo
         d2 = new Dice(612,382);
         triangles=new triangle[24];
         for(int i=0; i<24; i++){
-            triangles[i]=new triangle();
+            if (i < 12) {
+                triangles[i]=new triangle(true);
+            } else triangles[i] = new triangle(false);
+        }
+        // this for loop runs once and paints initial checker positions
+        for (int i = 0; i < triangles.length; i++) {
+            int x = 88+i*55;
+            x+=i>5 && i<12 || i>18?20:0; //change offset
+            if (i == 0) {
+                triangles[i].add(new Checker(88, 88, 'w'));
+                triangles[i].add(new Checker(88, 88+55, 'w'));
+                triangles[i].add(new Checker(88, 88+55*2, 'w'));
+                triangles[i].add(new Checker(88, 88+55*3, 'w'));
+                triangles[i].add(new Checker(88, 88+55*4, 'w'));
+            } else if (i == 6) {
+                triangles[i].add(new Checker(88+55*6+70, 88, 'b'));
+                triangles[i].add(new Checker(88+55*6+70, 88+55, 'b'));
+                triangles[i].add(new Checker(88+55*6+70, 88+55*2, 'b'));
+                triangles[i].add(new Checker(88+55*6+70, 88+55*3, 'b'));
+                triangles[i].add(new Checker(88+55*6+70, 88+55*4, 'b'));
+            }
+            if(i==0 || i==6 || i==12 || i==18) {
+
+            }
+            else if(i==4 || i==16) {
+                //3
+
+            } else if (i == 11 || i==23) {
+                //2
+
+            }
         }
         //DO NOT TOUCH these 3 lines
         //these lines load the listener that listens for the keyboard presses
@@ -103,8 +133,11 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, MouseMo
         d2.y=getHeight()/2;
         d1.paiut(window);
         d2.paiut(window);
-        triangles[0].add(new Checker(88,88,'w'));
-        triangles[0].paint(window);
+//        triangles[0].add(new Checker(88,88,'w'));
+//        triangles[0].paint(window);
+        for(triangle t:triangles) {
+            t.paint(window);
+        }
     }
 
     private void fillTriangle(Graphics window, int x, int bY, int w, int h, boolean up) {
