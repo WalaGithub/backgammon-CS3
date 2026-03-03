@@ -10,18 +10,25 @@ public class Checker extends JPanel {
         color=c;
     }
     public void paint(Graphics window, boolean iUD) {
-        if(color=='w'){
-            window.setColor(Color.WHITE);
-        }
-        else if(color=='b'){
-            window.setColor(Color.BLACK);
-        }
-        if(iUD) {
-            window.fillOval(x-22,y-22,55,55);
-        }
-        else {
-            window.fillOval(x-22,y-22,55,55);
-        }
+        // same size/position you already use
+        int px = x - 22;
+        int py = y - 22;
+        Color d, l;
 
+        if (color == 'w') {
+            d  = Color.DARK_GRAY;
+            l = Color.WHITE;
+        } else {
+            d  = Color.BLACK;
+            l = Color.DARK_GRAY;
+        }
+        window.setColor(d);
+        window.fillOval(px - 3, py - 3, 55 + 6, 55 + 6);
+        window.setColor(l);
+        window.fillOval(px, py, 55, 55);
+        window.setColor(d);
+        window.fillOval(px + 6, py + 6, 55 - 12, 55 - 12);
+        window.setColor(l);
+        window.fillOval(px + 9, py + 9, 55 - 18, 55 - 18);
     }
 }

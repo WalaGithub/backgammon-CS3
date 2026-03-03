@@ -31,31 +31,54 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, MouseMo
             } else triangles[i] = new triangle(false);
         }
         // this for loop runs once and paints initial checker positions
+        // this for loop runs once and paints initial checker positions
         for (int i = 0; i < triangles.length; i++) {
-            int x = 88+i*55;
-            x+=i>5 && i<12 || i>18?20:0; //change offset
-            if (i == 0) {
-                triangles[i].add(new Checker(88, 88, 'w'));
-                triangles[i].add(new Checker(88, 88+55, 'w'));
-                triangles[i].add(new Checker(88, 88+55*2, 'w'));
-                triangles[i].add(new Checker(88, 88+55*3, 'w'));
-                triangles[i].add(new Checker(88, 88+55*4, 'w'));
-            } else if (i == 6) {
-                triangles[i].add(new Checker(88+55*6+70, 88, 'b'));
-                triangles[i].add(new Checker(88+55*6+70, 88+55, 'b'));
-                triangles[i].add(new Checker(88+55*6+70, 88+55*2, 'b'));
-                triangles[i].add(new Checker(88+55*6+70, 88+55*3, 'b'));
-                triangles[i].add(new Checker(88+55*6+70, 88+55*4, 'b'));
+
+            int col = i % 12;
+            int x = 88 + col * 55;
+            if (col > 5) x += 70;
+
+            boolean topRow = (i < 12);
+
+            int baseY = topRow ? 88 : (768 - 88);
+            int dir   = topRow ? 55 : -55;
+
+            //5
+            if (i == 0) {                 // 5 (white)
+                for (int k = 0; k < 5; k++) {
+                    triangles[i].add(new Checker(x, baseY + dir * k, 'w'));
+                }
             }
-            if(i==0 || i==6 || i==12 || i==18) {
+            else if (i == 6) {            // 5 (black)
+                for (int k = 0; k < 5; k++) {
+                    triangles[i].add(new Checker(x, baseY + dir * k, 'b'));
+                }
+            }
+            else if (i == 12) {           // 5 (black)
+                for (int k = 0; k < 5; k++) {
+                    triangles[i].add(new Checker(x, baseY + dir * k, 'b'));
+                }
+            }
+            else if (i == 18) {           // 5 (white)
+                for (int k = 0; k < 5; k++) {
+                    triangles[i].add(new Checker(x, baseY + dir * k, 'w'));
+                }
 
             }
-            else if(i==4 || i==16) {
-                //3
 
-            } else if (i == 11 || i==23) {
-                //2
+            else if (i == 4) {            // 3 (black)
+                for (int k = 0; k < 3; k++) triangles[i].add(new Checker(x, baseY + dir * k, 'b'));
+            }
+            else if (i == 16) {           // 3 (white)
+                for (int k = 0; k < 3; k++) triangles[i].add(new Checker(x, baseY + dir * k, 'w'));
+            }
 
+            // 2
+            else if (i == 11) {           // 2 (white)
+                for (int k = 0; k < 2; k++) triangles[i].add(new Checker(x, baseY + dir * k, 'w'));
+            }
+            else if (i == 23) {           // 2 (black)
+                for (int k = 0; k < 2; k++) triangles[i].add(new Checker(x, baseY + dir * k, 'b'));
             }
         }
         //DO NOT TOUCH these 3 lines
