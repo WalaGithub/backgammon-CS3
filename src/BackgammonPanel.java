@@ -35,13 +35,12 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, MouseMo
         plW=new Player('w');
         plB=new Player('b');
         // this for loop runs once and paints initial checker positions
-        // this for loop runs once and paints initial checker positions
+        // this for loop runs oxnce and paints initial checker positions
         for (int i = 0; i < triangles.length; i++) {
 
             int col = i % 12;
             int x = 88 + col * 57;
             if (col > 5) x += 70;
-
             boolean topRow = (i < 12);
 
             int baseY = topRow ? 88 : (640);
