@@ -268,4 +268,5 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, MouseMo
             e.printStackTrace();
         }
     }
+    //
 }
