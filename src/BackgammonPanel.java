@@ -1,42 +1,51 @@
 import java.awt.*;
-import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.*;
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import javax.swing.*;
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
+
 //
-class BackgammonPanel extends JPanel implements Runnable, MouseListener, MouseMotionListener {
+class BackgammonPanel extends JPanel implements Runnable, KeyListener{
     Dice d1, d2;
+    private static final int w   = 1024;
+    private static final int h   = 768;
+    private static final int mar  = 30;   // outer margin
+    private static final int fr   = 35;   // frame w
+    private static final int bar  = 70;   // center bar w
+    private static final int off  = 140;  // offboard panel w
+    private static final int in_x = mar + fr;// 65
+    private static final int in_y = mar + fr;// 65
+    private static final int in_w = w - 2 * (mar + fr) - off;// 644
+    private static final int in_h = h - 2 * (mar + fr);// 628
+    private static final int mid_x = in_x + (in_w - bar) / 2;// left edge of bar
+    private static final int off_x  = in_x + in_w;// left edge of offboard
+    private static final int pw    = (in_w - bar) / 12;// point width
+    private static final int ph    = (int) ((double) in_h / 2 * 0.90);// point height
+    private static final int d1_x = mid_x - bar / 4 - 35;
+    private static final int d2_x = mid_x + bar / 4 + 35;
+    private static final int d_y  = h / 2;
     private String mouse_button;
     private int mouse_x, mouse_y;
     private triangle[] triangles;
     Player plW;
     Player plB;
+    Player cPlayer;
+    int cursorP = 0;
+    int selectedP = -1;
+    String moveError=null;
     public BackgammonPanel() {
-        int w = getWidth();
-        int h = getHeight();
-        mouse_button = "NO BUTTON CLICKED!";
-        d1 = new Dice(412,382);
-        d2 = new Dice(612,382);
+        d1 = new Dice(d1_x,d_y);
+        d2 = new Dice(d2_x,d_y);
         triangles=new triangle[24];
         for(int i=0; i<24; i++){
-            if (i < 12) {
-                triangles[i]=new triangle(true);
-            } else triangles[i] = new triangle(false);
+            triangles[i]=new triangle(i<12);
         }
+        startCheck();
         plW=new Player('w');
         plB=new Player('b');
+        cPlayer = plW;
+        cPlayer.beginTurn();
         // this for loop runs once and paints initial checker positions
         // this for loop runs oxnce and paints initial checker positions
-        for (int i = 0; i < triangles.length; i++) {
+        /*for (int i = 0; i < triangles.length; i++) {
 
             int col = i % 12;
             int x = 88 + col * 57;
@@ -83,16 +92,45 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, MouseMo
             else if (i == 23) {           // 2 (black)
                 for (int k = 0; k < 2; k++) triangles[i].add(new Checker(x, baseY + dir * k, 'b'));
             }
-        }
+        }*/
         //DO NOT TOUCH these 3 lines
         //these lines load the listener that listens for the keyboard presses
 //		addKeyListener( this );   	//
         setFocusable(true);        // Do NOT DELETE these three lines
-        addMouseListener(this); //
-        mouse_x = 0;
-        mouse_y = 0;
-        addMouseMotionListener(this);
+        addKeyListener(this);
         new Thread(this).start();    //
+    }
+    void startCheck() {
+        // [point ] = {count,color}
+        int[][] s = {
+                {0,  5, 'w'},
+                {6,  5, 'b'},
+                {12, 5, 'b'},
+                {18, 5, 'w'},
+                {4,  3, 'b'},
+                {16, 3, 'w'},
+                {11, 2, 'w'},
+                {23, 2, 'b'}
+        };
+        for (int[] ss : s) {
+            int i = ss[0];
+            int c = ss[1];
+            char col = (char)ss[2];
+            int c12=i%12;
+            int x = in_x+c12*pw+pw/2;
+            if(c12>=6)x+=bar;
+            boolean top = i < 12;
+            int base = top ? in_y : in_y + in_h;
+            int dir=top?1:-1;
+            for (int j = 0; j < c; j++) {
+                triangles[i].add(new Checker(x,base+dir*(j*pw+pw/2),col));
+            }
+        }
+    }
+    //fix/check logic here
+    int travelIndex(int bI,char c) {
+        if(c=='w') return bI;
+        else return 23-bI;
     }
 
     public void paint(Graphics window)// all other paint methods and game logic goes in here.
@@ -104,64 +142,46 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, MouseMo
         window.drawRect(0, 0, 1024, 768); // draws a black box around the outside
 
         window.setColor(Color.BLUE); // to change fonts, color, etc: go to the Graphics Intro Folder
-        window.setColor(Color.WHITE);
-        window.drawString("Mouse coordinates " + "(" + MouseInfo.getPointerInfo().getLocation().x + "   " + MouseInfo.getPointerInfo().getLocation().y + ")", 250, 20);
+//        window.setColor(Color.WHITE);
+//        window.drawString("Mouse coordinates " + "(" + MouseInfo.getPointerInfo().getLocation().x + "   " + MouseInfo.getPointerInfo().getLocation().y + ")", 250, 20);
         window.setColor(Color.RED);
         window.drawString("Mouse coordinates " + "(" + mouse_x + "   " + mouse_y + ")", 600, 20);
-
-        int w = getWidth();
-        int h = getHeight();
-        int mar = 30;
-        int fr = 35;
-        int barW = 70;
         window.setColor(new Color(110, 60, 30));
         window.fillRect(mar, mar, w - 2 * mar, h - 2 * mar);
-        int inX = mar + fr;
-        int inY = mar + fr;
-        int offW = 140;
-        int inW = w - 2 * (mar + fr) - offW;
-        int offX = inX + inW;
-        int inH = h - 2 * (mar + fr);
-        window.setColor(new Color(170, 140, 90));
-        window.fillRect(inX, inY, inW, inH);
-        int midX = inX + (inW - barW) / 2;
+        window.setColor(new Color(170,140,90));
+        window.fillRect(in_x,in_y,in_w,in_h);
         window.setColor(new Color(90, 50, 25));
-        window.fillRect(midX, inY, barW, inH);
-////
+        window.fillRect(mid_x,in_y,bar,in_h);
         window.setColor(new Color(80, 45, 25));
-        window.fillRect(offX, inY, offW, inH);
+        window.fillRect(off_x,in_y,off,in_h);
         window.setColor(Color.BLACK);
-        window.drawRect(offX, inY, offW, inH);
-        window.drawLine(offX, inY, offX, inY + inH);
-        int hal = inH / 2;
-        int pH = (int) (hal * .90);
-        int pW = (inW - barW) / 12;
-        for (int i = 0; i < 12; i++) {
-            int topX;
-            if (i < 6) {
-                topX = inX + i * pW;
-            } else topX = inX + barW + i * pW;
-            Color c = (i % 2 == 0) ? new Color(120, 80, 45) : new Color(235, 230, 210);
-            window.setColor(c);
-            fillTriangle(window, topX, inY, pW, pH, false);
-            fillTriangle(window, topX, inY + inH, pW, pH, true);
-        }
-        window.setColor(Color.BLACK);
-        window.drawRect(mar, mar, w - 2 * mar, h - 2 * mar);
+        window.drawRect(off_x,in_y,off,in_h);
         //board end
-        d1.x=15*getWidth()/24-50;
-        d1.y=getHeight()/2;
-        d2.x=15*getWidth()/24+50;
-        d2.y=getHeight()/2;
-        d1.paiut(window);
-        d2.paiut(window);
+        for (int i = 0; i < 12; i++) {
+            int p = in_x + i * pw + (i >= 6 ? bar : 0);
+            window.setColor((i%2==0)?new Color(120,80,45):new Color(235,230,210));
+            fillTriangle(window, p, in_y, pw, ph, false);
+            fillTriangle(window, p, in_y+in_h, pw, ph, true);
+
+        }
 //        triangles[0].add(new Checker(88,88,'w'));
 //        triangles[0].paint(window);
-        for(triangle t:triangles) {
+        window.setColor(Color.BLACK);
+        window.drawRect(mar,mar,w-2*mar,h-2*mar);
+        d1.x = d1_x;
+        d1.y=d_y;
+        d2.y=d_y;
+        d2.x=d2_x;
+        d1.paiut(window);
+        d2.paiut(window);
+        for (triangle t : triangles) {
             t.paint(window);
         }
-        plW.turnStart(d1,d2);
+        pCursor(window);
+        pHUD(window);
     }
+
+
 
     private void fillTriangle(Graphics window, int x, int bY, int w, int h, boolean up) {
         int[] xs = {x, x + w, x + w / 2};
@@ -173,91 +193,168 @@ class BackgammonPanel extends JPanel implements Runnable, MouseListener, MouseMo
         }
         window.fillPolygon(xs, ys, 3);
     }
-    @Override
-    public void mousePressed(MouseEvent e) {
-    }
-    @Override
-    public void mouseDragged(MouseEvent e) {
-    }
-    public void mouseMoved(MouseEvent e) {
-        mouse_x = e.getX();
-        mouse_y = e.getY();
-    }
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
-    /*
 
-bbbbbbbbbbbbbbbbbbbbbbbb
-    import javax.swing.*;
-    import java.util.*;
-    import java.awt.*;
-    import java.awt.event.*;
-    import java.awt.image.BufferedImage;
-
-    public class MouseBob extends JPanel implements Runnable, MouseListener, MouseMotionListener {
-        private int mouse_x, mouse_y;
-        private String mouse_button;
-        private ArrayList<Bob> bobs;
-
-        public MouseBob() {
-            setBackground(Color.WHITE);
-            mouse_x = 0;
-            mouse_y = 0;
-            mouse_button = "NO BUTTON CLICKED!";
-            bobs = new ArrayList<Bob>();
-            addMouseListener(this);
-            addMouseMotionListener(this);
-            new Thread(this).start();
-
-            // Load your custom cursor image
-            BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-            Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
-                    cursorImg, new Point(0, 0), "blank cursor");
-            setCursor(blankCursor);
-
-            // Set the custom cursor to your JPanel
-            setCursor(blankCursor);
+    void pCursor(Graphics window) {
+        pointHigh(window, cursorP, new Color(255, 220, 0, 180), 4);
+        if (selectedP != -1) {
+            pointHigh(window,selectedP,new Color(0,255,80,180),4);
         }
+    }
 
-        public void paintComponent(Graphics window) {
-            super.paintComponent(window); // Always call the super method
-            window.setColor(Color.BLACK);
-            window.fillRect(0, 0, 800, 600);
+    private void pointHigh(Graphics window, int i, Color color, int t) {
+        int c12=i%12;
+        int p = in_x+c12*pw+(c12>=6?bar:0);
+        boolean top = i<12;
+        int[] xs = {p, p + pw, p + pw / 2};
+        int[] ys;
+        if (top) {
+            ys = new int[]{in_y, in_y, in_y+ ph};
+        }
+        else {
+            ys = new int[]{in_y + in_h, in_y + in_h, in_y + in_h - ph};
+        }
+        Graphics2D second = (Graphics2D) window;
+        Stroke old = second.getStroke();
+        second.setColor(color);
+        second.setStroke(new BasicStroke(t));
+        second.drawPolygon(xs, ys, 3);
+        second.setStroke(old);
+    }
+    private void pHUD(Graphics window) {
+        window.setFont(new Font("Arial", Font.BOLD, 14));
+        window.setColor(Color.WHITE);
+        window.drawString("Player " + cPlayer.c + "'s turn", 30, 20);
+        if (!cPlayer.rolled) {
+            window.setColor(Color.YELLOW);
+            window.drawString("Press G to roll", 200, 20);
+        }
+        else {
             window.setColor(Color.WHITE);
-            window.drawString("Mouse coordinates " + "(" + MouseInfo.getPointerInfo().getLocation().x + "   " + MouseInfo.getPointerInfo().getLocation().y + ")", 250, 30);
-            window.setColor(Color.RED);
-            window.drawString("Mouse coordinates " + "(" + mouse_x + "   " + mouse_y + ")", 250, 50);
-            window.setColor(Color.GREEN);
-            window.drawString(mouse_button, 250, 70);
-
-            // This makes a new Bob on the mouse cursor
-            Bob b = new Bob(mouse_x, mouse_y, 50, 50);
-
-            // This paints the bob on the mouse cursor
-            b.paintComponent(window);
+            window.drawString("Dice: " + d1.number + " + " + d2.number, 200, 20);
+            window.drawString("left or right to choose, d to pick, f to move",330,20);
         }
-    */
-    public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            mouse_button = "LEFT CLICK";
-            int[] c1=d1.getCordinets();
-            int[] c2=d2.getCordinets();
-            if((mouse_x>c1[0] && mouse_x<c1[1] && mouse_y>c1[2] && mouse_y<c1[3]) || (mouse_x>c2[0] && mouse_x<c2[1] && mouse_y>c2[2] && mouse_y<c2[3])){
-                d1.roll();
-                d2.roll();
-            }
-        } else if (e.getButton() == MouseEvent.BUTTON3) {
-            mouse_button = "RIGHT CLICK";
+        if(moveError!=null) {
+            window.setColor(Color.RED);
+            window.drawString(moveError,30,745);
         }
     }
 
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+        if (key == KeyEvent.VK_G) {
+            if (cPlayer.mturn && !cPlayer.rolled) {
+                d1.roll();;
+                d2.roll();
+                cPlayer.onDiceRolled();
+                moveError=null;
+                System.out.println("Rolled: "+d1.number+" + "+d2.number);
+            }
+            return;
+        }
+        if(!cPlayer.rolled) return;
+        if (key == KeyEvent.VK_LEFT) {
+            cursorP = (cursorP+23)%24;
+            moveError=null;
+        } else if (key == KeyEvent.VK_RIGHT) {
+            cursorP=(cursorP+1)%24;
+            moveError=null;
+        } else if (key == KeyEvent.VK_D) {
+            triangle t = triangles[cursorP];
+            if (!t.x.isEmpty() && t.x.peek().color == cPlayer.c) {
+                selectedP = cursorP;
+                moveError=null;
+                System.out.println("Picked checker on point " + selectedP);
+            } else moveError="No checker of yours on the point "+cursorP;
+        } else if (key == KeyEvent.VK_F) {
+            if (selectedP == -1) {
+                moveError="Pick a checker with D";
+            } else if (selectedP == cursorP) {
+                moveError="Already here, move yo cursor";
+
+            } else tryMove(selectedP, cursorP);
+        } else if (key == KeyEvent.VK_E) {
+            if(d1.used && d2.used) {
+                endTurn();;
+            } else if (!d1.used && !d2.used) {
+                moveError="Use your dice";
+            }
+            else endTurn();
+        }
+    }
+
+    void tryMove(int f, int t) {
+        int tF = travelIndex(f, cPlayer.c);
+        int tT = travelIndex(t, cPlayer.c);
+        int dist = tT-tF;
+        if (dist <= 0) {
+            moveError = "Move forward dir " +
+                    (cPlayer.c == 'w' ? "(follow top row right then bottom row right" : "(follow bottom row left then top row left)");
+            return;
+        }
+        triangle dest = triangles[t];
+        char o = cPlayer.c == 'w' ? 'b' : 'w';
+        if (dest.x.size() >= 2 && dest.x.peek().color == o) {
+            moveError = "Point is blocket by opp";
+            return;
+        }
+        if (!d1.used && d1.number == dist) {
+            moveChecker((f), t);
+            d1.used=true;
+            moveError=null;
+        } else if (!d2.used && d2.number == dist) {
+            moveChecker(f, t);
+            d2.used=true;
+            moveError=null;
+        }
+        else {
+            String a="";
+            if(!d1.used) a += d1.number + " ";
+            if(!d2.used) a += d2.number + " ";
+            moveError="move dist "+dist+" doesnt match available dice ("+ a.trim() + ")";
+        }
+        if (d1.used && d2.used) {
+            endTurn();
+        }
+    }
+    private void moveChecker(int f, int t) {
+        triangle src = triangles[f];
+        triangle des = triangles[t];
+        if(src.x.isEmpty()) return;
+        int c12=t%12;
+        int newX  = in_x + c12 * pw+ pw / 2 + (c12 >= 6 ? bar : 0);
+        boolean top  = t < 12;
+        int base = top ? in_y : in_y + in_h;
+        int dir  = top ? 1 : -1;
+        int newY = base + dir * (des.x.size() * pw + pw / 2);
+
+        Checker c = src.x.pop();
+        c.x = newX;
+        c.y = newY;
+        des.x.push(c);
+
+        System.out.println("Moved from " + f + " to " + t);
+        selectedP = -1;
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+    private void endTurn() {
+        cPlayer.endTurn();
+        cPlayer = cPlayer == plW ? plB : plW;
+        selectedP=-1;
+        cursorP=0;
+        cPlayer.beginTurn();
+    }
+    //
     public void run() {
         try {
             while (true) {
@@ -268,5 +365,4 @@ bbbbbbbbbbbbbbbbbbbbbbbb
             e.printStackTrace();
         }
     }
-    //
 }

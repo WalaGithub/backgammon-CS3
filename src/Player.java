@@ -2,16 +2,27 @@ import java.util.Scanner;
 public class Player {
 //    final String name;
     final char c;
+    boolean mturn;
+    boolean rolled;
 //    final Scanner scanner=new Scanner(System.in);//
     public Player(char color){
         c=color;
-        System.out.println("Player "+c+" please type your name");
+        mturn = false;
+        rolled = false;
+//        System.out.println("Player "+c+" please type your name");
 //        name=scanner.nextLine();
     }
-    public void turnStart(Dice d1, Dice d2){
-        System.out.println("Please roll dice and hit enter when complete");
-        d1.canRoll=true;
-//        System.out.println(scanner.nextLine());
-        System.out.println("Thank you");
+    void beginTurn() {
+        mturn = true;
+        rolled = false;
+        System.out.println("Player "+c+"'s turn. click the dice to roll");
+    }
+    public void onDiceRolled() {
+        rolled=true;
+        System.out.println("Player "+c+" rollde");
+    }
+    void endTurn() {
+        mturn =false;
+        rolled=false;
     }
 }
