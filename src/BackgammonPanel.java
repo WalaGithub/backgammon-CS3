@@ -28,6 +28,8 @@ class BackgammonPanel extends JPanel implements Runnable, KeyListener{
     Player plW;
     Player plB;
     Player cPlayer;
+    int iii=500000;
+    int a;
     int cursorP = 0;
     int selectedP = -1;
     String moveError=null;
@@ -240,8 +242,21 @@ class BackgammonPanel extends JPanel implements Runnable, KeyListener{
             window.drawString("left or right to choose, d to pick, f to move",330,20);
         }
         if(moveError!=null) {
+            if(iii==500000 || iii==499999) a = (int) (Math.random() * 2) +1;;
+            if(--iii>0) {
+                if(a%2==0) {
+                    window.setColor(Color.BLACK);
+                    window.fillRect(30,735-12,500,14);
+                }
+                else {
+                    window.setColor(Color.GRAY);
+                    window.fillRect(30,735-12,500,14);
+                }
+
+            }
+            else a = (int) (Math.random() * 2) +1; iii=500000;
             window.setColor(Color.RED);
-            window.drawString(moveError,30,745);
+            window.drawString(moveError,30,735);
         }
     }
     @Override
