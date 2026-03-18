@@ -41,8 +41,8 @@ class BackgammonPanel extends JPanel implements Runnable, KeyListener{
             triangles[i]=new triangle(i<12);
         }
         startCheck();
-        plW=new Player('b');
-        plB=new Player('w');
+        plW=new Player('w');
+        plB=new Player('b');
         cPlayer = plW;
         cPlayer.beginTurn();
         // this for loop runs once and paints initial checker positions
@@ -125,7 +125,7 @@ class BackgammonPanel extends JPanel implements Runnable, KeyListener{
             int base = top ? in_y : in_y + in_h;
             int dir=top?1:-1;
             for (int j = 0; j < c; j++) {
-                triangles[i].add(new Checker(x,base+dir*(j*pw+pw/2),col));
+                triangles[i].add(new Checker(x,(int) (base+dir*((j*0.60)*pw+pw/2)),col));
             }
         }
     }
@@ -349,10 +349,11 @@ class BackgammonPanel extends JPanel implements Runnable, KeyListener{
         boolean top  = t < 12;
         int base = top ? in_y : in_y + in_h;
         int dir  = top ? 1 : -1;
-        int newY = base + dir * (des.x.size() * pw + pw / 2);
+        int newY =(int) (base + dir * (des.x.size()*0.60 * pw + pw / 2));
 
         Checker c = src.x.pop();
         c.x = newX;
+
         c.y = newY;
         des.x.push(c);
 
