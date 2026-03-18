@@ -284,27 +284,33 @@ class BackgammonPanel extends JPanel implements Runnable, KeyListener{
         } else if (key == KeyEvent.VK_RIGHT) {
             cursorP=(cursorP+1)%24;
             moveError=null;
+        } else if (key == KeyEvent.VK_DOWN) {
+            cursorP = cursorP<=11?cursorP+12:cursorP;
+            moveError = null;
+        } else if (key == KeyEvent.VK_UP) {
+            cursorP = cursorP>11?cursorP-12:cursorP;
+            moveError = null;
         } else if (key == KeyEvent.VK_D) {
             triangle t = triangles[cursorP];
             if (!t.x.isEmpty() && t.x.peek().color == cPlayer.c) {
                 selectedP = cursorP;
-                moveError=null;
+                moveError = null;
                 System.out.println("Picked checker on point " + selectedP);
-            } else moveError="No checker of yours on the point "+cursorP;
+            } else moveError = "No checker of yours on the point " + cursorP;
         } else if (key == KeyEvent.VK_F) {
             if (selectedP == -1) {
-                moveError="Pick a checker with D";
+                moveError = "Pick a checker with D";
             } else if (selectedP == cursorP) {
-                moveError="Already here, move yo cursor";
+                moveError = "Already here, move yo cursor";
 
             } else tryMove(selectedP, cursorP);
         } else if (key == KeyEvent.VK_E) {
-            if(d1.used && d2.used) {
-                endTurn();;
+            if (d1.used && d2.used) {
+                endTurn();
+                ;
             } else if (!d1.used && !d2.used) {
-                moveError="Use your dice";
-            }
-            else endTurn();
+                moveError = "Use your dice";
+            } else endTurn();
         }
     }
     void tryMove(int f, int t) {
