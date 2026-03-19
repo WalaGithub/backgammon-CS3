@@ -38,63 +38,13 @@ class BackgammonPanel extends JPanel implements Runnable, KeyListener{
         d2 = new Dice(d2_x,d_y);
         triangles=new triangle[26];
         for(int i=0; i<26; i++){
-            triangles[i]=new triangle(i<12,i>23);
+            triangles[i]=new triangle(i<12 || i==23,i>23);
         }
         startCheck();
         plW=new Player('w');
         plB=new Player('b');
         cPlayer = plW;
         cPlayer.beginTurn();
-        // this for loop runs once and paints initial checker positions
-        // this for loop runs oxnce and paints initial checker positions
-        /*for (int i = 0; i < triangles.length; i++) {
-
-            int col = i % 12;
-            int x = 88 + col * 57;
-            if (col > 5) x += 70;
-            boolean topRow = (i < 12);
-
-            int baseY = topRow ? 88 : (640);
-            int dir   = topRow ? 55 : -55;
-
-            //5
-            if (i == 0) {                 // 5 (white)
-                for (int k = 0; k < 5; k++) {
-                    triangles[i].add(new Checker(x, baseY + dir * k, 'w'));
-                }
-            }
-            else if (i == 6) {            // 5 (black)
-                for (int k = 0; k < 5; k++) {
-                    triangles[i].add(new Checker(x, baseY + dir * k, 'b'));
-                }
-            }
-            else if (i == 12) {           // 5 (black)
-                for (int k = 0; k < 5; k++) {
-                    triangles[i].add(new Checker(x, baseY + dir * k, 'b'));
-                }
-            }
-            else if (i == 18) {           // 5 (white)
-                for (int k = 0; k < 5; k++) {
-                    triangles[i].add(new Checker(x, baseY + dir * k, 'w'));
-                }
-
-            }
-
-            else if (i == 4) {            // 3 (black)
-                for (int k = 0; k < 3; k++) triangles[i].add(new Checker(x, baseY + dir * k, 'b'));
-            }
-            else if (i == 16) {           // 3 (white)
-                for (int k = 0; k < 3; k++) triangles[i].add(new Checker(x, baseY + dir * k, 'w'));
-            }
-
-            // 2
-            else if (i == 11) {           // 2 (white)
-                for (int k = 0; k < 2; k++) triangles[i].add(new Checker(x, baseY + dir * k, 'w'));
-            }
-            else if (i == 23) {           // 2 (black)
-                for (int k = 0; k < 2; k++) triangles[i].add(new Checker(x, baseY + dir * k, 'b'));
-            }
-        }*/
         //DO NOT TOUCH these 3 lines
         //these lines load the listener that listens for the keyboard presses
 //		addKeyListener( this );   	//
@@ -125,7 +75,7 @@ class BackgammonPanel extends JPanel implements Runnable, KeyListener{
             int base = top ? in_y : in_y + in_h;
             int dir=top?1:-1;
             for (int j = 0; j < c; j++) {
-                triangles[i].add(new Checker(x,(int) (base+dir*((j*0.60)*pw+pw/2)),col));
+                triangles[i].add(new Checker(x,(int) (base+dir*((j*0.60)*pw+pw/2))-5,col));
             }
         }
     }
@@ -187,11 +137,8 @@ class BackgammonPanel extends JPanel implements Runnable, KeyListener{
         d2.x=d2_x;
         d1.paiut(window);
         d2.paiut(window);
-        int i=0;
         for (triangle t : triangles) {
-            if(i==24) break;
             t.paint(window);
-            i++;
         }
         pCursor(window);
         pHUD(window);
@@ -377,11 +324,14 @@ class BackgammonPanel extends JPanel implements Runnable, KeyListener{
         }
         int c12=t%12;
         int newX  = in_x + c12 * pw+ pw / 2 + (c12 >= 6 ? bar : 0);
-        boolean top  = t < 12;
+        boolean top  = triangles[t].iUD;
         int base = top ? in_y : in_y + in_h;
         int dir  = top ? 1 : -1;
-        int newY =(int) (base + dir * (des.x.size()*0.60 * pw + pw / 2));
-
+        int newY =(int) (base + dir * (des.x.size()*0.60 * pw + pw / 2))-5;
+        if(t>23){
+            newX=in_x + 6* pw+ pw / 2;
+            System.out.println(triangles[t].iUD);
+        }
         Checker c = src.x.pop();
         c.x = newX;
 
