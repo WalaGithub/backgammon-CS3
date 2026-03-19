@@ -5,10 +5,12 @@ public class triangle {
     Stack<Checker> x;
     boolean iUD;
     boolean iJ;
-    public triangle(boolean isUpsideDown, boolean isJail){
+    boolean iW;
+    public triangle(boolean isUpsideDown, boolean isJail, boolean isWin){
         x=new Stack<>();
         iUD = isUpsideDown;
         iJ=isJail;
+        iW=isWin;
     }
     public void add(Checker c){
         x.add(c);

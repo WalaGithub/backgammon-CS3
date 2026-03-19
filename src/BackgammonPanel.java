@@ -36,9 +36,9 @@ class BackgammonPanel extends JPanel implements Runnable, KeyListener{
     public BackgammonPanel() {
         d1 = new Dice(d1_x,d_y);
         d2 = new Dice(d2_x,d_y);
-        triangles=new triangle[26];
-        for(int i=0; i<26; i++){
-            triangles[i]=new triangle(i<12 || i==23,i>23);
+        triangles=new triangle[28];
+        for(int i=0; i<28; i++){
+            triangles[i]=new triangle(i<12 || i==23,i>23 && i<26, i>25);
         }
         //
         startCheck();
