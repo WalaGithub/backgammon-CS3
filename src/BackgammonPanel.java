@@ -129,10 +129,7 @@ class BackgammonPanel extends JPanel implements Runnable, KeyListener{
             window.setColor((i%2==0)?new Color(120,80,45):new Color(235,230,210));
             fillTriangle(window, p, in_y, pw, ph, false);
             fillTriangle(window, p, in_y+in_h, pw, ph, true);
-
         }
-//        triangles[0].add(new Checker(88,88,'w'));
-//        triangles[0].paint(window);
         window.setColor(Color.BLACK);
         window.drawRect(mar,mar,w-2*mar,h-2*mar);
         d1.x = d1_x;
@@ -218,7 +215,6 @@ class BackgammonPanel extends JPanel implements Runnable, KeyListener{
     }
     @Override
     public void keyTyped(KeyEvent e) {
-
     }
     @Override
     public void keyPressed(KeyEvent e) {
