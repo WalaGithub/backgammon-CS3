@@ -370,10 +370,8 @@ class BackgammonPanel extends JPanel implements Runnable, KeyListener{
         }
         Checker c = src.x.pop();
         c.x = newX;
-
         c.y = newY;
         des.x.push(c);
-
         System.out.println("Moved from " + f + " to " + t);
         selectedP = -1;
     }
