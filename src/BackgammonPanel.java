@@ -249,22 +249,17 @@ class BackgammonPanel extends JPanel implements Runnable, KeyListener{
             moveError = null;
         } else if (key == KeyEvent.VK_D) {
             triangle t = triangles[cursorP];
-            if (!t.x.isEmpty() && t.x.peek().color == cPlayer.c) {
-                if(!triangles[cPlayer.c=='w' ? 25:24].x.isEmpty()){
-                    selectedP =cPlayer.c=='w' ? 25:24;
-                    System.out.println("Forced to select piece in jail \nIf no move is possible, click e");
-                }
-                else{
-                    selectedP = cursorP;
-                    moveError = null;
-                    System.out.println("Picked checker on point " + selectedP);
-                }
+            if(!triangles[cPlayer.c=='w' ? 25:24].x.isEmpty()){
+                selectedP =cPlayer.c=='w' ? 25:24;
+                System.out.println("Forced to select piece in jail \nIf no move is possible, click e");
+            } else if (!t.x.isEmpty() && t.x.peek().color == cPlayer.c) {
+                selectedP = cursorP;
+                moveError = null;
+                System.out.println("Picked checker on point " + selectedP);
             } else moveError = "No checker of yours on the point " + cursorP;
         } else if (key == KeyEvent.VK_F) {
             if (selectedP == -1) {
                 moveError = "Pick a checker with D";
-            } else if (selectedP == cursorP) {
-                moveError = "Already here, move yo cursor";
             } else tryMove(selectedP, cursorP);
         } else if (key == KeyEvent.VK_E) {
             endTurn();
@@ -289,12 +284,14 @@ class BackgammonPanel extends JPanel implements Runnable, KeyListener{
             }
             else d1.used=true;
             moveError=null;
+            return;
         } else if (!d2.used && d2.number > dist && (cPlayer.c=='b' && t==11)) {
             System.out.println("worked");
             moveChecker(f, 26, cPlayer.c);
             if(d2.doubdoub) d2.doubdoub=false;
             else d2.used=true;
             moveError=null;
+            return;
         } else if (!d1.used && d1.number > dist && (cPlayer.c=='w' && t==23)) {
             System.out.println("worked");
             moveChecker(f, 27, cPlayer.c);
@@ -303,12 +300,14 @@ class BackgammonPanel extends JPanel implements Runnable, KeyListener{
             }
             else d1.used=true;
             moveError=null;
+            return;
         } else if (!d2.used && d2.number > dist && (cPlayer.c=='w' && t==23)) {
             System.out.println("worked");
             moveChecker(f, 27, cPlayer.c);
             if(d2.doubdoub) d2.doubdoub=false;
             else d2.used=true;
             moveError=null;
+            return;
         } else if (dest.x.size() >= 2 && dest.x.peek().color == o) {
             moveError = "Point is blocket by opp";
             return;
@@ -320,11 +319,13 @@ class BackgammonPanel extends JPanel implements Runnable, KeyListener{
             }
             else d1.used=true;
             moveError=null;
+            return;
         } else if (!d2.used && d2.number == dist) {
             moveChecker(f, t, cPlayer.c);
             if(d2.doubdoub) d2.doubdoub=false;
             else d2.used=true;
             moveError=null;
+            return;
         } else {
             String a="";
             if(!d1.used) a += d1.number + " ";
@@ -361,6 +362,7 @@ class BackgammonPanel extends JPanel implements Runnable, KeyListener{
         }
         if(t>25){
             newX=in_x + 13* pw+ pw / 2+40;
+            newY =(int) (base + dir * (des.x.size()*0.30 * pw + pw / 2))-5;
             System.out.println(triangles[t].iUD);
             if(des.x.size()+1==15){
                 System.out.println("player "+cl+" won!!!");
